@@ -12,3 +12,64 @@
  ○ Compiling / ...
  ✓ Compiled / in 2.1s
  HEAD / 200 in 2379ms
+ ○ Compiling /auth/signup ...
+ ✓ Compiled /auth/signup in 955ms
+ GET /auth/signup 200 in 1111ms
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 810ms
+ GET /icons/icon-144x144.png 404 in 1467ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 1753ms
+ ✓ Compiled /api/auth/register in 301ms
+ POST /api/auth/register 201 in 1511ms
+ ✓ Compiled /auth/signin in 301ms
+ GET /auth/signin 200 in 350ms
+ GET /api/auth/providers 200 in 52ms
+ GET /api/auth/csrf 200 in 17ms
+ POST /api/auth/callback/credentials 200 in 358ms
+ GET /api/auth/session 200 in 34ms
+ GET / 200 in 46ms
+ GET /dashboard 404 in 37ms
+ GET /dashboard 404 in 53ms
+ GET /api/auth/session 200 in 44ms
+ GET /icons/icon-144x144.png 404 in 66ms
+Error: Can't resolve 'tw-animate-css' in '/Users/ekodevapps/Desktop/payflow/src/app'
+    [2m[at finishWithoutResolve (/Users/ekodevapps/Desktop/payflow/node_modules/enhanced-resolve/lib/Resolver.js:565:18)][0m
+    [2m[at /Users/ekodevapps/Desktop/payflow/node_modules/enhanced-resolve/lib/Resolver.js:657:14][0m
+    [2m[at /Users/ekodevapps/Desktop/payflow/node_modules/enhanced-resolve/lib/Resolver.js:718:5][0m
+    [2m[at eval (eval at create (/Users/ekodevapps/Desktop/payflow/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:15:1)][0m
+    [2m[at /Users/ekodevapps/Desktop/payflow/node_modules/enhanced-resolve/lib/Resolver.js:718:5][0m
+    [2m[at eval (eval at create (/Users/ekodevapps/Desktop/payflow/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:27:1)][0m
+    [2m[at /Users/ekodevapps/Desktop/payflow/node_modules/enhanced-resolve/lib/DescriptionFilePlugin.js:89:43][0m
+    [2m[at /Users/ekodevapps/Desktop/payflow/node_modules/enhanced-resolve/lib/Resolver.js:718:5][0m
+    [2m[at eval (eval at create (/Users/ekodevapps/Desktop/payflow/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:15:1)][0m
+    [2m[at /Users/ekodevapps/Desktop/payflow/node_modules/enhanced-resolve/lib/Resolver.js:718:5][0m {
+  details: "resolve 'tw-animate-css' in '/Users/ekodevapps/Desktop/payflow/src/app'\n" +
+    '  Parsed request is a module\n' +
+    '  using description file: /Users/ekodevapps/Desktop/payflow/package.json (relative path: ./src/app)\n' +
+    '    resolve as module\n' +
+    "      /Users/ekodevapps/Desktop/payflow/src/app/node_modules doesn't exist or is not a directory\n" +
+    "      /Users/ekodevapps/Desktop/payflow/src/node_modules doesn't exist or is not a directory\n" +
+    '      looking for modules in /Users/ekodevapps/Desktop/payflow/node_modules\n' +
+    '        single file module\n' +
+    '          using description file: /Users/ekodevapps/Desktop/payflow/package.json (relative path: ./node_modules/tw-animate-css)\n' +
+    '            no extension\n' +
+    "              /Users/ekodevapps/Desktop/payflow/node_modules/tw-animate-css doesn't exist\n" +
+    '            .css\n' +
+    "              /Users/ekodevapps/Desktop/payflow/node_modules/tw-animate-css.css doesn't exist\n" +
+    "        /Users/ekodevapps/Desktop/payflow/node_modules/tw-animate-css doesn't exist\n" +
+    "      /Users/ekodevapps/Desktop/node_modules doesn't exist or is not a directory\n" +
+    "      /Users/ekodevapps/node_modules doesn't exist or is not a directory\n" +
+    "      /Users/node_modules doesn't exist or is not a directory\n" +
+    "      /node_modules doesn't exist or is not a directory"
+}
+ ✓ Compiled in 191ms
+ ✓ Compiled in 184ms
+ ✓ Compiled in 353ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 930ms
+ GET /dashboard 200 in 1204ms
+ GET /dashboard 200 in 57ms
+ HEAD /dashboard 200 in 207ms
+ ✓ Compiled in 91ms
