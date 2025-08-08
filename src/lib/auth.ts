@@ -8,15 +8,11 @@ import "~/types/auth";
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
   providers: [
-    // Only include Google if credentials are provided
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && 
-        process.env.GOOGLE_CLIENT_ID !== "your-google-client-id"
-      ? [GoogleProvider({
-          clientId: process.env.GOOGLE_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        })]
-      : []
-    ),
+    // Google OAuth provider
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     // Only include Email if server is configured
     ...(process.env.EMAIL_SERVER_HOST && 
         process.env.EMAIL_SERVER_HOST !== "smtp.gmail.com" &&
@@ -44,6 +40,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "database",
   },
+  debug: process.env.NODE_ENV === "development",
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
