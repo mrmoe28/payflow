@@ -1,0 +1,76 @@
+# Documentation files
+README.md
+*.md
+docs/
+VERCEL_SETUP.md
+CLAUDE.md
+
+# CRITICAL: Agent files and development tools (MUST exclude from deployment)
+agents/
+*.py
+*.pyc
+*.pyo
+__pycache__/
+*.yaml
+*.yml
+requirements.txt
+*_SETUP.md
+VERCEL_MONITOR_SETUP.md
+
+# Python environments and packages
+venv/
+env/
+.venv/
+.env/
+*.egg-info/
+dist/
+build/
+
+# Environment and setup files
+.env.local
+.env.development
+.env.vercel
+.env.vercel.local
+scripts/setup-vercel-env.sh
+scripts/
+
+# Development tools
+.vscode/
+.idea/
+.pytest_cache/
+.coverage
+.mypy_cache/
+
+# Testing files
+coverage/
+test-results/
+tests/
+*_test.py
+test_*.py
+
+# Temporary and log files
+*.tmp
+*.temp
+*.log
+logs/
+.DS_Store
+Thumbs.db
+
+# Git and CI files
+.git/
+.github/
+.gitignore
+.gitattributes
+
+# Editor files
+*.swp
+*.swo
+*~
+.vim/
+
+# Additional safety exclusions for agent files
+*agent*.py
+*monitor*.py
+*webhook*.py
+setup-*.sh
+verify-*.sh

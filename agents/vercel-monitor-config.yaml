@@ -1,0 +1,154 @@
+# PayFlow Vercel Deployment Monitor Configuration
+
+# Vercel API Configuration
+vercel:
+  token: "${VERCEL_TOKEN}"  # Get from https://vercel.com/account/tokens
+  team_id: "${VERCEL_TEAM_ID}"  # Optional: for team deployments
+  project_name: "payflow"
+  base_url: "https://api.vercel.com"
+
+# Monitoring Configuration
+monitoring:
+  interval_seconds: 30
+  max_deployment_history: 100
+  max_error_history: 500
+  health_check_delay: 30  # seconds after deployment success
+  
+  # Error severity thresholds
+  severity_levels:
+    critical: ["build_failure", "runtime_crash", "database_connection_lost"]
+    high: ["environment_missing", "authentication_error", "timeout"]
+    medium: ["performance_degradation", "api_error"]
+    low: ["warning", "info"]
+
+# Automatic Fix Configuration
+auto_fixes:
+  enabled: true
+  max_attempts: 3
+  backoff_seconds: 10
+  
+  # Enable/disable specific fix types
+  fix_types:
+    environment_variables: true
+    prisma_generation: true
+    dependency_resolution: true
+    build_scripts: true
+    configuration_updates: false  # Requires manual approval
+
+# Alert Configuration
+alerts:
+  enabled: true
+  
+  # Notification channels
+  channels:
+    slack:
+      enabled: false
+      webhook_url: "${SLACK_WEBHOOK_URL}"
+      channel: "#deployments"
+      
+    email:
+      enabled: false
+      smtp_host: "${SMTP_HOST}"
+      smtp_port: 587
+      username: "${SMTP_USERNAME}"
+      password: "${SMTP_PASSWORD}"
+      from_address: "alerts@payflow.com"
+      to_addresses: ["admin@payflow.com"]
+      
+    discord:
+      enabled: false
+      webhook_url: "${DISCORD_WEBHOOK_URL}"
+      
+    pagerduty:
+      enabled: false
+      service_key: "${PAGERDUTY_SERVICE_KEY}"
+  
+  # Alert thresholds
+  thresholds:
+    critical_error_count: 1  # Alert immediately on critical errors
+    error_rate_5min: 5  # Alert if more than 5 errors in 5 minutes
+    deployment_failure_rate: 0.5  # Alert if >50% deployments fail
+
+# PayFlow-Specific Monitoring
+payflow:
+  # API endpoints to monitor
+  health_endpoints:
+    - "/api/health"
+    - "/api/trpc/health"
+    - "/api/auth/session"
+  
+  # Database monitoring
+  database:
+    connection_timeout: 10
+    query_timeout: 30
+    max_connections: 10
+  
+  # Authentication monitoring
+  auth:
+    session_timeout: 3600
+    oauth_providers: ["google", "email"]
+  
+  # Performance thresholds
+  performance:
+    max_build_time: 300  # 5 minutes
+    max_function_duration: 10  # 10 seconds
+    max_memory_usage: 512  # MB
+
+# Webhook Configuration
+webhook:
+  port: 3001
+  path: "/webhook/vercel"
+  secret: "${WEBHOOK_SECRET}"  # For signature verification
+  timeout: 30
+  
+  # Events to process
+  events:
+    - "deployment.created"
+    - "deployment.ready" 
+    - "deployment.error"
+    - "deployment.canceled"
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Log rotation
+  rotation:
+    max_bytes: 10485760  # 10MB
+    backup_count: 5
+  
+  # Log destinations
+  destinations:
+    console: true
+    file: "logs/vercel-monitor.log"
+    syslog: false
+
+# Security Configuration
+security:
+  webhook_signature_verification: true
+  api_rate_limiting: true
+  max_requests_per_minute: 60
+  
+  # IP whitelist (optional)
+  allowed_ips: []  # Empty means allow all
+  
+  # Required headers
+  required_headers:
+    - "user-agent"
+    - "x-vercel-signature"  # For webhook verification
+
+# Maintenance Windows
+maintenance:
+  # Times when alerts should be suppressed
+  windows:
+    daily:
+      start: "02:00"  # UTC
+      end: "04:00"    # UTC
+      timezone: "UTC"
+    
+    weekly:
+      day: "sunday"
+      start: "01:00"
+      end: "06:00"
+      timezone: "UTC"
