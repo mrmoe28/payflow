@@ -8,16 +8,7 @@
    - Environments: .env.local, .env
 
  ✓ Starting...
- ✓ Ready in 1001ms
+ ✓ Ready in 915ms
  ○ Compiling / ...
- ✓ Compiled / in 1942ms
- HEAD / 200 in 2154ms
-   Reload env: .env
- HEAD / 200 in 686ms
- ○ Compiling /api/auth/[...nextauth] ...
- ✓ Compiled /api/auth/[...nextauth] in 676ms
-[next-auth][warn][DEBUG_ENABLED] 
-https://next-auth.js.org/warnings#debug_enabled
- HEAD /api/auth/session 400 in 1962ms
- HEAD /api/auth/providers 400 in 19ms
- GET /api/auth/providers 200 in 20ms
+ ✓ Compiled / in 2.1s
+ HEAD / 200 in 2379ms
