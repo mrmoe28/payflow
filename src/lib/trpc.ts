@@ -6,6 +6,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { authOptions } from "./auth";
 import { db } from "./db";
+import { NextRequest } from "next/server";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -18,9 +19,19 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
   };
 };
 
+// Pages API context (legacy support)
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
   const session = await getServerSession(req, res, authOptions);
+
+  return createInnerTRPCContext({
+    session,
+  });
+};
+
+// App Router context
+export const createTRPCAppContext = async (req: NextRequest) => {
+  const session = await getServerSession(authOptions);
 
   return createInnerTRPCContext({
     session,
