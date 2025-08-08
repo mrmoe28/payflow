@@ -74,7 +74,7 @@ export const signaturesRouter = createTRPCRouter({
 
       // Check if all signatures are completed
       const allSigned = signature.document.signatures.every(
-        (sig) => sig.status === "SIGNED"
+        (sig: { status: string }) => sig.status === "SIGNED"
       );
 
       if (allSigned) {
