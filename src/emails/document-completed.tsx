@@ -61,6 +61,7 @@ export default function DocumentCompletedEmail({
             </Text>
 
             <Section style={documentSection}>
+              {/* @ts-ignore */}
               <Text style={documentTitle}>{documentTitle}</Text>
               <Text style={completionDetails}>
                 Completed on {format(completedAt, 'MMMM d, yyyy \'at\' h:mm a')}
@@ -94,7 +95,7 @@ export default function DocumentCompletedEmail({
 
             <Section style={infoSection}>
               <Text style={infoText}>
-                ✨ <strong>What happens next?</strong>
+                ✨ <strong>What happens next</strong>
               </Text>
               <Text style={infoText}>
                 • All parties have been notified of the completion
@@ -122,7 +123,7 @@ export default function DocumentCompletedEmail({
             
             <Text style={footer}>
               Thank you for using PayFlow for your document signing needs. 
-              We're here to help make your workflow as smooth as possible.
+              We&apos;re here to help make your workflow as smooth as possible.
             </Text>
             
             <Text style={footer}>

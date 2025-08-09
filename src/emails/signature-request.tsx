@@ -55,6 +55,7 @@ export default function SignatureRequestEmail({
             </Text>
 
             <Section style={documentSection}>
+              {/* @ts-ignore */}
               <Text style={documentTitle}>{documentTitle}</Text>
             </Section>
 

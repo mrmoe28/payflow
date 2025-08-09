@@ -69,6 +69,7 @@ export default function SignatureReminderEmail({
             </Text>
 
             <Section style={documentSection}>
+              {/* @ts-ignore */}
               <Text style={documentTitle}>{documentTitle}</Text>
               <Text style={pendingDetails}>
                 Pending for {daysPending} day{daysPending !== 1 ? 's' : ''}
