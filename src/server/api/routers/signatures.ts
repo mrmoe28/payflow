@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/lib/trpc";
+import { sendEmailSafe } from "~/lib/email";
+import SignatureRequestEmail from "~/emails/signature-request";
+import SignatureReminderEmail from "~/emails/signature-reminder";
+import DocumentCompletedEmail from "~/emails/document-completed";
 
 export const signaturesRouter = createTRPCRouter({
   // Enhanced bulk operations for signatures
@@ -143,6 +147,42 @@ export const signaturesRouter = createTRPCRouter({
               status: "COMPLETED",
             },
           });
+
+          // Send completion notification to document sender
+          const documentWithSender = await ctx.db.document.findUnique({
+            where: { id: signature.documentId },
+            include: {
+              sender: true,
+              signatures: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          });
+
+          if (documentWithSender?.sender) {
+            const signers = documentWithSender.signatures
+              .filter(sig => sig.status === "SIGNED" && sig.signedAt)
+              .map(sig => ({
+                name: sig.user?.name || sig.recipientEmail,
+                email: sig.recipientEmail,
+                signedAt: sig.signedAt!,
+              }));
+
+            await sendEmailSafe({
+              to: documentWithSender.sender.email!,
+              subject: `Document Completed: ${documentWithSender.title}`,
+              template: DocumentCompletedEmail({
+                recipientName: documentWithSender.sender.name || 'User',
+                documentTitle: documentWithSender.title,
+                completedAt: new Date(),
+                totalSignatures: signers.length,
+                signers,
+                documentUrl: `${process.env.NEXTAUTH_URL}/documents/${documentWithSender.id}`,
+              }),
+            });
+          }
         }
 
         return signature;
@@ -241,7 +281,27 @@ export const signaturesRouter = createTRPCRouter({
         )
       );
 
-      // TODO: Implement actual email sending logic here
+      // Send reminder emails to all recipients
+      await Promise.all(
+        signatures.map(async (signature) => {
+          const daysPending = Math.floor(
+            (Date.now() - signature.createdAt.getTime()) / (1000 * 60 * 60 * 24)
+          );
+
+          return sendEmailSafe({
+            to: signature.recipientEmail,
+            subject: `Reminder: Please sign "${signature.document.title}"`,
+            template: SignatureReminderEmail({
+              recipientName: signature.recipientName || signature.recipientEmail,
+              documentTitle: signature.document.title,
+              senderName: ctx.session.user.name || 'PayFlow User',
+              signatureUrl: `${process.env.NEXTAUTH_URL}/sign/${signature.id}`,
+              daysPending,
+              expiresAt: signature.document.expiresAt || undefined,
+            }),
+          });
+        })
+      );
 
       return {
         count: updatedSignatures.length,
@@ -283,7 +343,24 @@ export const signaturesRouter = createTRPCRouter({
           });
         }
 
-        // TODO: Implement email sending logic here
+        // Send reminder email
+        const daysPending = Math.floor(
+          (Date.now() - signature.createdAt.getTime()) / (1000 * 60 * 60 * 24)
+        );
+
+        await sendEmailSafe({
+          to: signature.recipientEmail,
+          subject: `Reminder: Please sign "${signature.document.title}"`,
+          template: SignatureReminderEmail({
+            recipientName: signature.recipientName || signature.recipientEmail,
+            documentTitle: signature.document.title,
+            senderName: ctx.session.user.name || 'PayFlow User',
+            signatureUrl: `${process.env.NEXTAUTH_URL}/sign/${signature.id}`,
+            daysPending,
+            expiresAt: signature.document.expiresAt || undefined,
+          }),
+        });
+
         return ctx.db.signature.update({
           where: {
             id: input.signatureId,

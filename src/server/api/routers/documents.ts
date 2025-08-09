@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "~/lib/trpc";
+import { sendEmailSafe } from "~/lib/email";
+import SignatureRequestEmail from "~/emails/signature-request";
 
 export const documentsRouter = createTRPCRouter({
   // Enhanced dashboard statistics
@@ -208,8 +210,24 @@ export const documentsRouter = createTRPCRouter({
           },
         });
 
-        // TODO: If sendImmediately is true, trigger email notifications
-        // This would integrate with your email service
+        // Send email notifications if sendImmediately is true
+        if (sendImmediately && document.signatures.length > 0) {
+          await Promise.all(
+            document.signatures.map(async (signature) => {
+              return sendEmailSafe({
+                to: signature.recipientEmail,
+                subject: `Signature Request: ${document.title}`,
+                template: SignatureRequestEmail({
+                  recipientName: signature.recipientName || signature.recipientEmail,
+                  documentTitle: document.title,
+                  senderName: document.sender?.name || 'PayFlow User',
+                  signatureUrl: `${process.env.NEXTAUTH_URL}/sign/${signature.id}`,
+                  expiresAt: document.expiresAt || undefined,
+                }),
+              });
+            })
+          );
+        }
 
         return document;
       } catch (error) {

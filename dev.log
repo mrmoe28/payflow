@@ -124,3 +124,42 @@ https://next-auth.js.org/warnings#debug_enabled
  GET /api/auth/session 200 in 18ms
  GET /api/auth/session 200 in 36ms
  HEAD /dashboard 200 in 606ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/ekodevapps/Desktop/payflow/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/ekodevapps/Desktop/payflow/.next/server/app/page/app-build-manifest.json'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1948ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/ekodevapps/Desktop/payflow/.next/static/development/_buildManifest.js.tmp.qhm29gudge'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/ekodevapps/Desktop/payflow/.next/static/development/_buildManifest.js.tmp.qhm29gudge'
+}
+[Error: ENOENT: no such file or directory, open '/Users/ekodevapps/Desktop/payflow/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/ekodevapps/Desktop/payflow/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/ekodevapps/Desktop/payflow/.next/static/development/_buildManifest.js.tmp.blaxe5z2lzi'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/ekodevapps/Desktop/payflow/.next/static/development/_buildManifest.js.tmp.blaxe5z2lzi'
+}
+[Error: ENOENT: no such file or directory, open '/Users/ekodevapps/Desktop/payflow/.next/static/development/_buildManifest.js.tmp.vhbjy6w3m3'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/ekodevapps/Desktop/payflow/.next/static/development/_buildManifest.js.tmp.vhbjy6w3m3'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/ekodevapps/Desktop/payflow/.next/server/app/favicon.ico/[__metadata_id__]/route/app-paths-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/ekodevapps/Desktop/payflow/.next/server/app/favicon.ico/[__metadata_id__]/route/app-paths-manifest.json'
+}
+[?25h
