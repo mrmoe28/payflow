@@ -18,6 +18,10 @@ import {
 import { Progress } from "~/components/ui/progress";
 import { Separator } from "~/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Loading } from "~/components/ui/loading";
+import { DocumentUploadModal } from "~/components/dashboard/document-upload-modal";
+import { DocumentsTable } from "~/components/dashboard/documents-table";
+import { SignaturesTable } from "~/components/dashboard/signatures-table";
 import { 
   FileText, 
   Upload, 
@@ -30,13 +34,21 @@ import {
   LogOut,
   Home,
   BarChart3,
-  User
+  User,
+  TrendingUp,
+  Activity
 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { api } from "~/utils/api";
+import { format } from "date-fns";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  // Fetch dashboard data
+  const { data: dashboardStats, isLoading: statsLoading } = api.documents.getDashboardStats.useQuery();
+  const { data: documents, isLoading: documentsLoading } = api.documents.getAll.useQuery();
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -47,9 +59,12 @@ export default function DashboardPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">
-          <div className="h-8 w-32 bg-muted rounded mb-4"></div>
-          <div className="h-4 w-48 bg-muted rounded"></div>
+        <div className="space-y-4">
+          <Loading className="h-8 w-8" />
+          <div className="text-center">
+            <div className="h-4 w-32 bg-muted rounded mx-auto mb-2"></div>
+            <div className="h-3 w-24 bg-muted rounded mx-auto"></div>
+          </div>
         </div>
       </div>
     );
@@ -60,6 +75,9 @@ export default function DashboardPage() {
   }
 
   const userInitials = session.user?.name?.split(' ').map(n => n[0]).join('') || session.user?.email?.[0].toUpperCase() || 'U';
+
+  // Calculate recent activity from documents
+  const recentDocuments = documents?.slice(0, 5) || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -79,7 +97,7 @@ export default function DashboardPage() {
                 <Home className="h-4 w-4" />
                 <span>Dashboard</span>
               </Button>
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+              <Button variant="ghost" size="sm" className="flex items-center space-x-2" onClick={() => router.push("/dashboard/analytics")}>
                 <BarChart3 className="h-4 w-4" />
                 <span>Analytics</span>
               </Button>
@@ -87,10 +105,12 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button className="flex items-center space-x-2">
-              <Plus className="h-4 w-4" />
-              <span>New Document</span>
-            </Button>
+            <DocumentUploadModal>
+              <Button className="flex items-center space-x-2">
+                <Plus className="h-4 w-4" />
+                <span>New Document</span>
+              </Button>
+            </DocumentUploadModal>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -111,11 +131,11 @@ export default function DashboardPage() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
@@ -151,9 +171,11 @@ export default function DashboardPage() {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">24</div>
+              <div className="text-2xl font-bold">
+                {statsLoading ? <Loading size="sm" /> : dashboardStats?.totalDocuments || 0}
+              </div>
               <p className="text-xs text-muted-foreground">
-                +2 from last month
+                {dashboardStats && 'documentsThisMonth' in dashboardStats ? `+${(dashboardStats as any).documentsThisMonth} this month` : 'No activity this month'}
               </p>
             </CardContent>
           </Card>
@@ -164,9 +186,11 @@ export default function DashboardPage() {
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">8</div>
+              <div className="text-2xl font-bold">
+                {statsLoading ? <Loading size="sm" /> : dashboardStats?.pendingSignatures || 0}
+              </div>
               <p className="text-xs text-muted-foreground">
-                3 expiring soon
+                {dashboardStats && 'expiringSoon' in dashboardStats ? `${(dashboardStats as any).expiringSoon} expiring soon` : 'None expiring soon'}
               </p>
             </CardContent>
           </Card>
@@ -177,9 +201,11 @@ export default function DashboardPage() {
               <CheckCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">16</div>
+              <div className="text-2xl font-bold">
+                {statsLoading ? <Loading size="sm" /> : dashboardStats?.completedDocuments || 0}
+              </div>
               <p className="text-xs text-muted-foreground">
-                +4 this week
+                {dashboardStats && 'completedThisWeek' in dashboardStats ? `+${(dashboardStats as any).completedThisWeek} this week` : 'None this week'}
               </p>
             </CardContent>
           </Card>
@@ -187,11 +213,16 @@ export default function DashboardPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">94%</div>
-              <Progress value={94} className="mt-2" />
+              <div className="text-2xl font-bold">
+                {statsLoading ? <Loading size="sm" /> : `${Math.round(dashboardStats?.completionRate || 0)}%`}
+              </div>
+              <Progress 
+                value={dashboardStats?.completionRate || 0} 
+                className="mt-2"
+              />
             </CardContent>
           </Card>
         </div>
@@ -214,42 +245,49 @@ export default function DashboardPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="h-2 w-2 bg-blue-600 rounded-full"></div>
-                    <div className="flex-1 space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        Contract Agreement signed
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        2 hours ago
-                      </p>
+                  {documentsLoading ? (
+                    <div className="space-y-3">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="animate-pulse">
+                          <div className="flex items-center space-x-4">
+                            <div className="h-2 w-2 bg-muted rounded-full"></div>
+                            <div className="flex-1 space-y-1">
+                              <div className="h-4 w-3/4 bg-muted rounded"></div>
+                              <div className="h-3 w-1/2 bg-muted rounded"></div>
+                            </div>
+                            <div className="h-5 w-16 bg-muted rounded"></div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <Badge variant="secondary">Completed</Badge>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="h-2 w-2 bg-yellow-500 rounded-full"></div>
-                    <div className="flex-1 space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        NDA sent for signature
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        1 day ago
-                      </p>
+                  ) : recentDocuments.length > 0 ? (
+                    recentDocuments.map((doc) => (
+                      <div key={doc.id} className="flex items-center space-x-4">
+                        <div className={`h-2 w-2 rounded-full ${
+                          doc.status === 'COMPLETED' ? 'bg-green-600' :
+                          doc.status === 'SENT' ? 'bg-yellow-500' :
+                          doc.status === 'DRAFT' ? 'bg-gray-400' :
+                          'bg-red-500'
+                        }`}></div>
+                        <div className="flex-1 space-y-1">
+                          <p className="text-sm font-medium leading-none">
+                            {doc.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(doc.updatedAt), "MMM d, h:mm a")}
+                          </p>
+                        </div>
+                        <Badge variant={doc.status === 'COMPLETED' ? 'default' : doc.status === 'SENT' ? 'outline' : 'secondary'}>
+                          {doc.status.charAt(0) + doc.status.slice(1).toLowerCase()}
+                        </Badge>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8">
+                      <Activity className="h-12 w-12 mx-auto text-muted-foreground opacity-50 mb-2" />
+                      <p className="text-muted-foreground">No recent activity</p>
                     </div>
-                    <Badge variant="outline">Pending</Badge>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="h-2 w-2 bg-green-600 rounded-full"></div>
-                    <div className="flex-1 space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        Service Agreement uploaded
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        2 days ago
-                      </p>
-                    </div>
-                    <Badge variant="secondary">Draft</Badge>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -261,10 +299,12 @@ export default function DashboardPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Button className="w-full justify-start" variant="outline">
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload Document
-                  </Button>
+                  <DocumentUploadModal>
+                    <Button className="w-full justify-start" variant="outline">
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload Document
+                    </Button>
+                  </DocumentUploadModal>
                   <Button className="w-full justify-start" variant="outline">
                     <Users className="mr-2 h-4 w-4" />
                     Send for Signature
@@ -272,6 +312,14 @@ export default function DashboardPage() {
                   <Button className="w-full justify-start" variant="outline">
                     <FileText className="mr-2 h-4 w-4" />
                     Create Template
+                  </Button>
+                  <Button 
+                    className="w-full justify-start" 
+                    variant="outline"
+                    onClick={() => router.push("/dashboard/analytics")}
+                  >
+                    <BarChart3 className="mr-2 h-4 w-4" />
+                    View Analytics
                   </Button>
                 </CardContent>
               </Card>
@@ -287,14 +335,7 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-10 text-muted-foreground">
-                  <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No documents found</p>
-                  <Button className="mt-4">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Upload Your First Document
-                  </Button>
-                </div>
+                <DocumentsTable />
               </CardContent>
             </Card>
           </TabsContent>
@@ -308,14 +349,7 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-10 text-muted-foreground">
-                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No signature requests found</p>
-                  <Button className="mt-4">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Send First Request
-                  </Button>
-                </div>
+                <SignaturesTable />
               </CardContent>
             </Card>
           </TabsContent>

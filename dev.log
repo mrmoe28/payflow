@@ -73,3 +73,54 @@ Error: Can't resolve 'tw-animate-css' in '/Users/ekodevapps/Desktop/payflow/src/
  GET /dashboard 200 in 57ms
  HEAD /dashboard 200 in 207ms
  ✓ Compiled in 91ms
+ GET /verify-email/resend 404 in 771ms
+ GET /verify-email/resend 404 in 210ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 174ms
+ GET /icons/icon-144x144.png 404 in 183ms
+ GET /api/auth/session 200 in 35ms
+ GET /api/auth/session 200 in 44ms
+ GET /icons/icon-144x144.png 404 in 83ms
+ GET /dashboard 200 in 158ms
+ GET /api/auth/session 200 in 58ms
+ GET /icons/icon-144x144.png 404 in 116ms
+ GET /api/auth/session 200 in 80ms
+ GET /api/auth/session 200 in 21ms
+ GET /api/auth/session 200 in 20ms
+ GET /api/auth/session 200 in 508ms
+ GET /api/auth/session 200 in 232ms
+ GET /api/auth/session 200 in 43ms
+ GET /api/auth/session 200 in 22ms
+ GET /verify-email/resend 404 in 141ms
+ GET /api/auth/session 200 in 72ms
+ GET /icons/icon-144x144.png 404 in 109ms
+ GET /api/auth/session 200 in 59ms
+ GET /api/auth/session 200 in 91ms
+ GET /api/auth/session 200 in 35ms
+ GET /api/auth/session 200 in 56ms
+ GET /api/auth/session 200 in 504ms
+ GET /api/auth/session 200 in 70ms
+ GET /api/auth/session 200 in 43ms
+ GET /api/auth/session 200 in 37ms
+ GET /api/auth/session 200 in 46ms
+ GET /api/auth/session 200 in 265ms
+ GET /api/auth/session 200 in 51ms
+ GET /api/auth/session 200 in 45ms
+ GET /api/auth/session 200 in 112ms
+ GET /dashboard 200 in 181ms
+ GET /api/auth/session 200 in 55ms
+ GET /icons/icon-144x144.png 404 in 104ms
+ GET /api/auth/session 200 in 74ms
+ GET /api/auth/session 200 in 26ms
+ GET /api/auth/session 200 in 16ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 930ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 1179ms
+ GET /api/auth/session 200 in 43ms
+ GET /api/auth/session 200 in 25ms
+ GET /api/auth/session 200 in 25ms
+ GET /api/auth/session 200 in 45ms
+ GET /api/auth/session 200 in 18ms
+ GET /api/auth/session 200 in 36ms
+ HEAD /dashboard 200 in 606ms
