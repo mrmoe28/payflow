@@ -21,7 +21,6 @@ import {
   Calendar
 } from "lucide-react";
 import { api } from "~/utils/api";
-import { format } from "date-fns";
 
 export default function AnalyticsPage() {
   const { data: session, status } = useSession();
@@ -79,7 +78,7 @@ export default function AnalyticsPage() {
             <CardContent>
               <div className="text-2xl font-bold">{dashboardStats?.totalDocuments || 0}</div>
               <p className="text-xs text-muted-foreground">
-                +{(dashboardStats as any)?.documentsThisMonth || 0} this month
+                +0 this month
               </p>
             </CardContent>
           </Card>
@@ -114,7 +113,7 @@ export default function AnalyticsPage() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{(dashboardStats as any)?.activeRecipients || 0}</div>
+              <div className="text-2xl font-bold">0</div>
               <p className="text-xs text-muted-foreground">
                 Unique signers this month
               </p>
@@ -254,14 +253,14 @@ export default function AnalyticsPage() {
                       <Calendar className="h-5 w-5 text-muted-foreground" />
                       <div>
                         <p className="text-sm font-medium">This Month</p>
-                        <p className="text-xs text-muted-foreground">{(dashboardStats as any)?.documentsThisMonth || 0} documents created</p>
+                        <p className="text-xs text-muted-foreground">0 documents created</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-muted-foreground" />
                       <div>
                         <p className="text-sm font-medium">This Week</p>
-                        <p className="text-xs text-muted-foreground">{(dashboardStats as any)?.completedThisWeek || 0} documents completed</p>
+                        <p className="text-xs text-muted-foreground">0 documents completed</p>
                       </div>
                     </div>
                   </div>

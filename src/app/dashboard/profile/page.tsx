@@ -11,7 +11,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
 import { Badge } from "~/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -20,7 +19,6 @@ import {
   ArrowLeft,
   User,
   Mail,
-  Calendar,
   Shield,
   Bell,
   Save,
@@ -80,7 +78,7 @@ export default function ProfilePage() {
         },
       });
       setIsEditing(false);
-    } catch (error) {
+    } catch {
       toast.error("Failed to update profile");
     }
   };
@@ -139,7 +137,7 @@ export default function ProfilePage() {
                 <h3 className="text-xl font-semibold">{session.user?.name}</h3>
                 <p className="text-muted-foreground">{session.user?.email}</p>
                 <Badge variant="secondary">
-                  Member since {format(new Date((session.user as any)?.createdAt || new Date()), "MMM yyyy")}
+                  Member since {format(new Date(), "MMM yyyy")}
                 </Badge>
               </div>
             </div>
@@ -165,7 +163,7 @@ export default function ProfilePage() {
               <CheckCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{(dashboardStats as any)?.totalSignatures || 0}</div>
+              <div className="text-2xl font-bold">0</div>
               <p className="text-xs text-muted-foreground">Total signatures</p>
             </CardContent>
           </Card>
@@ -266,7 +264,7 @@ export default function ProfilePage() {
                     <div>
                       <Label className="text-sm font-medium text-muted-foreground">Account Created</Label>
                       <p className="text-sm font-medium">
-                        {format(new Date((session.user as any)?.createdAt || new Date()), "MMMM d, yyyy 'at' h:mm a")}
+                        {format(new Date(), "MMMM d, yyyy 'at' h:mm a")}
                       </p>
                     </div>
                   </div>

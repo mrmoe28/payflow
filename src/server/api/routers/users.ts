@@ -172,7 +172,7 @@ export const usersRouter = createTRPCRouter({
     }),
 
   // Get user preferences/settings
-  getPreferences: protectedProcedure.query(async ({ ctx }) => {
+  getPreferences: protectedProcedure.query(async () => {
     // For now, return default preferences
     // In the future, you might want to add a UserPreferences table
     return {
@@ -209,7 +209,7 @@ export const usersRouter = createTRPCRouter({
         language: z.string().min(2).max(5).optional(),
       })
     )
-    .mutation(async ({ ctx: _ctx, input }) => {
+    .mutation(async ({ input }) => {
       // TODO: Store these preferences in a UserPreferences table
       // For now, return the updated preferences
       return {
@@ -228,7 +228,7 @@ export const usersRouter = createTRPCRouter({
         ),
       })
     )
-    .mutation(async ({ ctx, input: _input }) => {
+    .mutation(async ({ ctx }) => {
       try {
         // This will cascade delete all related documents and signatures
         // due to the foreign key constraints in the schema

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -54,7 +53,6 @@ export function DocumentUploadModal({ children }: DocumentUploadModalProps) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [dragOver, setDragOver] = useState(false);
   
-  const router = useRouter();
   const utils = api.useUtils();
 
   const form = useForm<DocumentFormData>({
@@ -167,7 +165,7 @@ export function DocumentUploadModal({ children }: DocumentUploadModalProps) {
         mimeType: file.type,
         recipients: data.recipients,
       });
-    } catch (error) {
+    } catch {
       setStep(2); // Go back to form on error
     }
   };

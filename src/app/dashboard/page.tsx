@@ -28,7 +28,6 @@ import {
   Users, 
   CheckCircle, 
   Clock, 
-  AlertCircle,
   Plus,
   Settings,
   LogOut,
@@ -158,7 +157,7 @@ export default function DashboardPage() {
               Welcome back, {session.user?.name?.split(' ')[0] || 'User'}!
             </h2>
             <p className="text-muted-foreground">
-              Here's what's happening with your documents today.
+              Here&apos;s what&apos;s happening with your documents today.
             </p>
           </div>
         </div>
@@ -175,7 +174,7 @@ export default function DashboardPage() {
                 {statsLoading ? <Loading size="sm" /> : dashboardStats?.totalDocuments || 0}
               </div>
               <p className="text-xs text-muted-foreground">
-                {dashboardStats && 'documentsThisMonth' in dashboardStats ? `+${(dashboardStats as any).documentsThisMonth} this month` : 'No activity this month'}
+                No activity this month
               </p>
             </CardContent>
           </Card>
@@ -190,7 +189,7 @@ export default function DashboardPage() {
                 {statsLoading ? <Loading size="sm" /> : dashboardStats?.pendingSignatures || 0}
               </div>
               <p className="text-xs text-muted-foreground">
-                {dashboardStats && 'expiringSoon' in dashboardStats ? `${(dashboardStats as any).expiringSoon} expiring soon` : 'None expiring soon'}
+                None expiring soon
               </p>
             </CardContent>
           </Card>
@@ -205,7 +204,7 @@ export default function DashboardPage() {
                 {statsLoading ? <Loading size="sm" /> : dashboardStats?.completedDocuments || 0}
               </div>
               <p className="text-xs text-muted-foreground">
-                {dashboardStats && 'completedThisWeek' in dashboardStats ? `+${(dashboardStats as any).completedThisWeek} this week` : 'None this week'}
+                None this week
               </p>
             </CardContent>
           </Card>

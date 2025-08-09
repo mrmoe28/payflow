@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   // Only allow in development for security
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json({ error: 'Debug endpoint disabled in production' }, { status: 403 });
